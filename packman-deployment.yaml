@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pacman-deployment
+  labels:
+    app: pacman
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: pacman
+  template:
+    metadata:
+      labels:
+        app: pacman
+    spec:
+      containers:
+      - name: pacman
+        image: ghcr.io/josesantos80166/pacman:2.0.
+        ports: 
+        - containerPort: 80
+          name: http-pacman
+        resources:
+          requests:
+            cpu:  10m
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: pacman
+  name: pacman
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: http-pacman
+  selector:
+    app: pacman
+  type: ClusterIP
